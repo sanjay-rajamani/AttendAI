@@ -1,8 +1,11 @@
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
+# ==========================================
+# Load Environment Variables
+# ==========================================
 load_dotenv()
+
 
 class Settings:
 
@@ -35,6 +38,9 @@ class Settings:
     OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
     GROQ_API_KEY = os.getenv("GROQ_API_KEY")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    GEMINI_MODEL = os.getenv("GEMINI_MODEL")
 
     # ===============================
     # Voice
