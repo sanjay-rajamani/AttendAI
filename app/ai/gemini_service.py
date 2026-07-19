@@ -15,9 +15,15 @@ User:
 {user_message}
 """
 
-    response = client.models.generate_content(
-        model=settings.GEMINI_MODEL,
-        contents=prompt
-    )
+    try:
+        response = client.models.generate_content(
+            model=settings.GEMINI_MODEL,
+            contents=prompt
+        )
 
-    return response.text
+        return response.text
+
+    except Exception as e:
+        print("Gemini Error:", e)
+
+        return '{"intent":"help"}'
