@@ -2,19 +2,14 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.schemas.subject import (
-    SubjectCreate,
-    SubjectUpdate,
-    SubjectResponse
-)
+from app.schemas.subject import SubjectCreate
+from app.schemas.imports import TextImport
 
 from app.services.subject_service import (
     create_subject,
-    get_all_subjects,
-    get_subject,
-    update_subject,
-    delete_subject
+    get_subjects
 )
+from app.services.subject_import_service import import_subjects
 
 router = APIRouter(
     prefix="/subjects",
@@ -22,7 +17,10 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=SubjectResponse)
+# ---------------------------------
+# Create Subject
+# ---------------------------------
+@router.post("/")
 def add_subject(
     subject: SubjectCreate,
     db: Session = Depends(get_db)
@@ -30,40 +28,25 @@ def add_subject(
     return create_subject(db, subject)
 
 
-@router.get("/", response_model=list[SubjectResponse])
+# ---------------------------------
+# Get All Subjects
+# ---------------------------------
+@router.get("/")
 def view_subjects(
     db: Session = Depends(get_db)
 ):
-    return get_all_subjects(db)
+    return get_subjects(db)
 
 
-@router.get("/{subject_id}", response_model=SubjectResponse)
-def view_subject(
-    subject_id: int,
+# ---------------------------------
+# Bulk Import Subjects
+# ---------------------------------
+@router.post("/import")
+def bulk_import_subjects(
+    request: TextImport,
     db: Session = Depends(get_db)
 ):
-    return get_subject(db, subject_id)
-
-
-@router.put("/{subject_id}", response_model=SubjectResponse)
-def edit_subject(
-    subject_id: int,
-    subject: SubjectUpdate,
-    db: Session = Depends(get_db)
-):
-    return update_subject(
-        db,
-        subject_id,
-        subject
-    )
-
-
-@router.delete("/{subject_id}")
-def remove_subject(
-    subject_id: int,
-    db: Session = Depends(get_db)
-):
-    return delete_subject(
-        db,
-        subject_id
+    return import_subjects(
+        db=db,
+        text=request.text
     )

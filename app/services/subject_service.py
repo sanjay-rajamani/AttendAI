@@ -5,11 +5,18 @@ from app.models.subject import Subject
 from app.schemas.subject import SubjectCreate, SubjectUpdate
 
 
+# -----------------------------
+# Create Subject
+# -----------------------------
 def create_subject(db: Session, subject: SubjectCreate):
 
-    existing = db.query(Subject).filter(
-        Subject.subject_code == subject.subject_code
-    ).first()
+    existing = (
+        db.query(Subject)
+        .filter(
+            Subject.subject_code == subject.subject_code
+        )
+        .first()
+    )
 
     if existing:
         raise HTTPException(
@@ -30,15 +37,25 @@ def create_subject(db: Session, subject: SubjectCreate):
     return new_subject
 
 
-def get_all_subjects(db: Session):
+# -----------------------------
+# Get All Subjects
+# -----------------------------
+def get_subjects(db: Session):
     return db.query(Subject).all()
 
 
+# -----------------------------
+# Get Single Subject
+# -----------------------------
 def get_subject(db: Session, subject_id: int):
 
-    subject = db.query(Subject).filter(
-        Subject.id == subject_id
-    ).first()
+    subject = (
+        db.query(Subject)
+        .filter(
+            Subject.id == subject_id
+        )
+        .first()
+    )
 
     if not subject:
         raise HTTPException(
@@ -49,6 +66,9 @@ def get_subject(db: Session, subject_id: int):
     return subject
 
 
+# -----------------------------
+# Update Subject
+# -----------------------------
 def update_subject(
     db: Session,
     subject_id: int,
@@ -66,6 +86,9 @@ def update_subject(
     return subject
 
 
+# -----------------------------
+# Delete Subject
+# -----------------------------
 def delete_subject(
     db: Session,
     subject_id: int
