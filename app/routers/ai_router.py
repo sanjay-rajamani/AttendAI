@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
+from app.database.database import get_db
 from app.schemas.ai import AIRequest
-from app.ai.executor import execute_command
+from app.services.ai_service import process_ai_message
 
 router = APIRouter(
     prefix="/ai",
@@ -10,6 +12,11 @@ router = APIRouter(
 
 
 @router.post("/chat")
-def chat(request: AIRequest):
-
-    return execute_command(request.message)
+def chat(
+    request: AIRequest,
+    db: Session = Depends(get_db)
+):
+    return process_ai_message(
+        db=db,
+        message=request.message
+    )

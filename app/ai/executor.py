@@ -1,7 +1,7 @@
 from app.ai.intent_parser import parse_intent
 
 
-def execute_command(message: str):
+def execute_command(message: str, db):
     """
     Parse the AI response and dispatch commands.
     """
@@ -35,6 +35,13 @@ def execute_command(message: str):
         return {
             "success": True,
             "message": "Temporary timetable change received.",
+            "data": intent
+        }
+
+    elif action == "error":
+        return {
+            "success": False,
+            "message": intent.get("message"),
             "data": intent
         }
 
